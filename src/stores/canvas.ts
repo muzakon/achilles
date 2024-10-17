@@ -10,6 +10,7 @@ export const useCanvasStore = defineStore("counter", () => {
     isDrawing: false,
     isResizing: false,
   });
+  const isNodeSelected = ref(false);
 
-  return { currentClickSession };
+  return { currentClickSession, isNodeSelected };
 });

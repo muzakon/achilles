@@ -1,79 +1,91 @@
 <template>
   <div>
-    <div class="resizeOverlay absolute z-[-1]" ref="resizeOverlay"></div>
+    <Toolbar :selected="canvasStore.isNodeSelected" />
 
-    <div class="bg-neutral-950 relative canvasContainer" ref="canvasContainer">
-      <div
-        @mousedown="onEdgeMouseDown($event, 'top-left')"
-        id="__left_top_selector"
-        className="w-[24px] h-[24px]  rounded-full absolute left-[-11px] top-[-11px] hover:bg-[#d946ef40] transition duration-200 cursor-nwse-resize z-[2]"
-      >
-        <div
-          className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-        ></div>
-      </div>
+    <div
+      class="resizeOverlay absolute z-[-1]"
+      ref="resizeOverlay"
+      v-if="canvasStore.isNodeSelected"
+    ></div>
 
-      <div
-        id="__right_top_selector"
-        className="w-[24px] h-[24px]  rounded-full absolute right-[-11px] top-[-11px] hover:bg-[#d946ef40] transition duration-200 cursor-nesw-resize	z-[2]"
-      >
+    <div
+      class="bg-neutral-950 relative canvasContainer"
+      ref="canvasContainer"
+      :selected="canvasStore.isNodeSelected"
+    >
+      <div v-if="canvasStore.isNodeSelected">
         <div
-          className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-        ></div>
-      </div>
+          @mousedown="onEdgeMouseDown($event, 'top-left')"
+          id="__left_top_selector"
+          className="w-[24px] h-[24px]  rounded-full absolute left-[-11px] top-[-11px] hover:bg-[#d946ef40] transition duration-200 cursor-nwse-resize z-[2]"
+        >
+          <div
+            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          ></div>
+        </div>
 
-      <div
-        id="__left_bottom_selector"
-        className="w-[24px] h-[24px]  rounded-full absolute left-[-11px] bottom-[-11px] hover:bg-[#d946ef40] transition duration-200 cursor-nesw-resize z-[2]"
-      >
         <div
-          className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-        ></div>
-      </div>
+          id="__right_top_selector"
+          className="w-[24px] h-[24px]  rounded-full absolute right-[-11px] top-[-11px] hover:bg-[#d946ef40] transition duration-200 cursor-nesw-resize	z-[2]"
+        >
+          <div
+            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          ></div>
+        </div>
 
-      <div
-        id="__right_bottom_selector"
-        className="w-[24px] h-[24px]  rounded-full absolute right-[-11px] bottom-[-11px] hover:bg-[#d946ef40] transition duration-200 cursor-nwse-resize z-[2]"
-      >
         <div
-          className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-        ></div>
-      </div>
+          id="__left_bottom_selector"
+          className="w-[24px] h-[24px]  rounded-full absolute left-[-11px] bottom-[-11px] hover:bg-[#d946ef40] transition duration-200 cursor-nesw-resize z-[2]"
+        >
+          <div
+            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          ></div>
+        </div>
 
-      <div
-        id="__top_center_selector"
-        className="w-[24px] h-[24px]  rounded-full absolute top-[-11px] left-1/2 hover:bg-[#d946ef40] transition duration-200 transform -translate-x-1/2 cursor-ns-resize	z-[2]"
-      >
         <div
-          className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-        ></div>
-      </div>
+          id="__right_bottom_selector"
+          className="w-[24px] h-[24px]  rounded-full absolute right-[-11px] bottom-[-11px] hover:bg-[#d946ef40] transition duration-200 cursor-nwse-resize z-[2]"
+        >
+          <div
+            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          ></div>
+        </div>
 
-      <div
-        id="__bottom_center_selector"
-        className="w-[24px] h-[24px]  rounded-full absolute bottom-[-11px] left-1/2 hover:bg-[#d946ef40] transition duration-200 transform -translate-x-1/2 cursor-ns-resize	z-[2]"
-      >
         <div
-          className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-        ></div>
-      </div>
+          id="__top_center_selector"
+          className="w-[24px] h-[24px]  rounded-full absolute top-[-11px] left-1/2 hover:bg-[#d946ef40] transition duration-200 transform -translate-x-1/2 cursor-ns-resize	z-[2]"
+        >
+          <div
+            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          ></div>
+        </div>
 
-      <div
-        id="__left_center_selector"
-        className="w-[24px] h-[24px]  rounded-full absolute top-1/2 left-[-11px] hover:bg-[#d946ef40] transition duration-200 transform -translate-y-1/2 cursor-ew-resize	z-[2]"
-      >
         <div
-          className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-        ></div>
-      </div>
+          id="__bottom_center_selector"
+          className="w-[24px] h-[24px]  rounded-full absolute bottom-[-11px] left-1/2 hover:bg-[#d946ef40] transition duration-200 transform -translate-x-1/2 cursor-ns-resize	z-[2]"
+        >
+          <div
+            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          ></div>
+        </div>
 
-      <div
-        id="__right_center_selector"
-        className="w-[24px] h-[24px]  rounded-full absolute top-1/2 right-[-11px] hover:bg-[#d946ef40] transition duration-200 transform -translate-y-1/2 cursor-ew-resize	z-[2]"
-      >
         <div
-          className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-        ></div>
+          id="__left_center_selector"
+          className="w-[24px] h-[24px]  rounded-full absolute top-1/2 left-[-11px] hover:bg-[#d946ef40] transition duration-200 transform -translate-y-1/2 cursor-ew-resize	z-[2]"
+        >
+          <div
+            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          ></div>
+        </div>
+
+        <div
+          id="__right_center_selector"
+          className="w-[24px] h-[24px]  rounded-full absolute top-1/2 right-[-11px] hover:bg-[#d946ef40] transition duration-200 transform -translate-y-1/2 cursor-ew-resize	z-[2]"
+        >
+          <div
+            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          ></div>
+        </div>
       </div>
 
       <canvas ref="canvas"></canvas>
@@ -84,18 +96,24 @@
 <script setup lang="ts">
 import { onMounted, type Ref, ref, watch } from "vue";
 import { useCanvasStore } from "@/stores/canvas";
+import Toolbar from "./Toolbar.vue";
+import { useVueFlow } from "@vue-flow/core";
+import _ from "lodash";
 
 const canvasContainer: Ref<HTMLDivElement | null> = ref(null);
 const resizeOverlay: Ref<HTMLDivElement | null> = ref(null);
 const canvas: Ref<HTMLCanvasElement | null> = ref(null);
 const context: Ref<CanvasRenderingContext2D | null> = ref(null);
 const canvasStore = useCanvasStore();
+const vueFlow = useVueFlow();
+
 const props = defineProps<{
   mousePosition: {
     x: number;
     y: number;
   };
   position: Object;
+  selected: boolean;
 }>();
 
 function onEdgeMouseDown($event: MouseEvent, position: string) {
@@ -177,35 +195,38 @@ watch(
       const originX = canvasStore.currentClickSession.originX;
       const originY = canvasStore.currentClickSession.originY;
 
-      if (props.position.x <= newValue.x && props.position.y <= newValue.y) {
-        return;
-      } else {
-        const divider = 5;
-        const newWidth =
-          newValue.x >= originX
-            ? 0
-            : Math.abs(Math.round(newValue.x / divider) * divider - originX);
-        const newHeight =
-          newValue.y >= originY
-            ? 0
-            : Math.abs(Math.round(newValue.y / divider) * divider - originY);
+      const divider = 10;
+      const newWidth =
+        newValue.x >= originX
+          ? 0
+          : Math.abs(Math.round(newValue.x / divider) * divider - originX) /
+            vueFlow.getViewport().zoom;
+      const newHeight =
+        newValue.y >= originY
+          ? 0
+          : Math.abs(Math.round(newValue.y / divider) * divider - originY) /
+            vueFlow.getViewport().zoom;
 
-        console.log(getCurrentCanvasContainerSize()?.height);
-        console.log(props.position.y);
-        const currentCanvasSize = getCurrentCanvasContainerSize();
+      const currentCanvasSize = getCurrentCanvasContainerSize();
 
-        if (currentCanvasSize) {
-          setResizeOverlaySize(
-            currentCanvasSize.width + newWidth,
-            currentCanvasSize.height + newHeight
-          );
-        }
+      if (currentCanvasSize) {
+        const finalWidth = currentCanvasSize.width + newWidth;
+        const finalHeight = currentCanvasSize.height + newHeight;
+
+        setResizeOverlaySize(finalWidth, finalHeight);
       }
     }
   },
   {
     deep: true,
   }
+);
+
+watch(
+  () => props.selected,
+  _.debounce((newValue) => {
+    canvasStore.isNodeSelected = newValue;
+  }, 2)
 );
 
 onMounted(() => {
@@ -227,6 +248,7 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .resizeOverlay {
+  border: 1px dotted #d946ef;
   background: linear-gradient(
     135deg,
     #d946ef40 10%,
@@ -242,6 +264,11 @@ onMounted(() => {
 }
 
 .canvasContainer {
+  &[selected="false"] {
+    &::after {
+      display: none !important;
+    }
+  }
   &::after {
     position: absolute;
     left: 0;

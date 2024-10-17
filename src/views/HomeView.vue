@@ -1,11 +1,15 @@
 <template>
   <div class="w-full h-full">
     <VueFlow
-      :nodes="nodes"
+      v-model:nodes="nodes"
       :snap-to-grid="true"
       :snap-grid="[20, 20]"
       @mousemove="onCanvasMouseMove"
       @mouseup="onCanvasMouseUp"
+      :zoom-on-double-click="false"
+      :max-zoom="2"
+      :min-zoom="0.8"
+      :fit-view-on-init="true"
     >
       <Background color="#404040" />
       <!-- bind your custom node type to a component by using slots, slot names are always `node-<type>` -->
@@ -26,8 +30,9 @@
 import { ref } from "vue";
 import { VueFlow } from "@vue-flow/core";
 import { Background } from "@vue-flow/background";
-import CanvasNode from "@/components/CanvasNode.vue";
 import { useCanvasStore } from "@/stores/canvas";
+
+import CanvasNode from "@/components/CanvasNode.vue";
 
 // Store
 const canvasStore = useCanvasStore();
@@ -44,7 +49,9 @@ function onCanvasMouseMove($event: MouseEvent) {
 function onCanvasMouseUp($event: MouseEvent) {
   if (canvasStore.currentClickSession.isResizing) {
     canvasStore.currentClickSession.isResizing = false;
-    console.log(canvasStore.currentClickSession);
+    setTimeout(() => {
+      nodes.value[0].selected = true;
+    }, 1);
   }
 }
 
@@ -56,6 +63,7 @@ const nodes = ref([
     // a label can property can be used for default nodes
     data: { label: "Node 1" },
     type: "canvas",
+    selected: false,
   },
 ]);
 </script>
