@@ -11,6 +11,9 @@
       :min-zoom="0.8"
       :fit-view-on-init="true"
     >
+      <Toolbar :selected="canvasStore.isNodeSelected" />
+      <PromptSection />
+
       <Background color="#404040" />
       <!-- bind your custom node type to a component by using slots, slot names are always `node-<type>` -->
       <template #node-canvas="specialNodeProps">
@@ -31,6 +34,9 @@ import { ref } from "vue";
 import { VueFlow } from "@vue-flow/core";
 import { Background } from "@vue-flow/background";
 import { useCanvasStore } from "@/stores/canvas";
+
+import Toolbar from "@/components/Toolbar.vue";
+import PromptSection from "@/components/PromptSection.vue";
 
 import CanvasNode from "@/components/CanvasNode.vue";
 

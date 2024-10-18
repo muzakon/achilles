@@ -1,7 +1,5 @@
 <template>
   <div>
-    <Toolbar :selected="canvasStore.isNodeSelected" />
-
     <div
       class="resizeOverlay absolute z-[-1]"
       ref="resizeOverlay"
