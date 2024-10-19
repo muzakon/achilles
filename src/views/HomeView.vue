@@ -1,5 +1,8 @@
 <template>
   <div class="w-full h-full">
+    <Sidebar />
+    <Toolbar :selected="canvasStore.isNodeSelected" />
+
     <VueFlow
       v-model:nodes="nodes"
       :snap-to-grid="true"
@@ -7,14 +10,12 @@
       @mousemove="onCanvasMouseMove"
       @mouseup="onCanvasMouseUp"
       :zoom-on-double-click="false"
-      :max-zoom="2"
-      :min-zoom="0.8"
-      :fit-view-on-init="true"
+      :max-zoom="3"
+      :min-zoom="1"
     >
-      <Toolbar :selected="canvasStore.isNodeSelected" />
       <PromptSection />
 
-      <Background color="#404040" />
+      <Background color="#ffffff40" :gap="40" :size="2" />
       <!-- bind your custom node type to a component by using slots, slot names are always `node-<type>` -->
       <template #node-canvas="specialNodeProps">
         <CanvasNode
@@ -37,6 +38,7 @@ import { useCanvasStore } from "@/stores/canvas";
 
 import Toolbar from "@/components/Toolbar.vue";
 import PromptSection from "@/components/PromptSection.vue";
+import Sidebar from "@/components/Sidebar.vue";
 
 import CanvasNode from "@/components/CanvasNode.vue";
 

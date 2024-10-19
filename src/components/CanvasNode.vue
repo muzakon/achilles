@@ -132,8 +132,10 @@ function setCanvasSize(width: number, height: number) {
   if (canvas.value) {
     setCanvasContainerSize(width, height);
     setResizeOverlaySize(width, height);
-    canvas.value.width = width;
-    canvas.value.height = height;
+    canvas.value.style.width = `${width}px`;
+    canvas.value.style.height = `${height}px`;
+    canvas.value.width = width * 3;
+    canvas.value.height = height * 3;
   }
 }
 
@@ -153,7 +155,7 @@ function setResizeOverlaySize(width: number, height: number) {
 
 function drawCanvasImage(image: HTMLImageElement) {
   if (context.value) {
-    context.value.drawImage(image, 0, 0);
+    context.value.drawImage(image, 0, 0, image.width, image.height);
   }
 }
 
@@ -230,12 +232,17 @@ watch(
 onMounted(() => {
   if (canvas.value) {
     context.value = canvas.value.getContext("2d");
+    if (context.value) {
+      context.value.imageSmoothingEnabled = false;
+      context.value.imageSmoothingQuality = "high";
+    }
+
     const defaultImage = new Image();
     defaultImage.src = "https://i.hizliresim.com/8ujm0qp.jpg";
 
     defaultImage.onload = () => {
-      const width = defaultImage.width;
-      const height = defaultImage.height;
+      const width = defaultImage.width / 3;
+      const height = defaultImage.height / 3;
 
       setCanvasSize(width, height);
       drawCanvasImage(defaultImage);
