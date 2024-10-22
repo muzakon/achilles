@@ -86,7 +86,17 @@
         </div>
       </div>
 
-      <canvas ref="canvas"></canvas>
+      <div
+        :class="{
+          'cursor-none': brushOptionsStore.brushOptions.mode
+            ? ['draw', 'draw-mask', 'eraser'].includes(
+                brushOptionsStore.brushOptions.mode
+              )
+            : false,
+        }"
+      >
+        <canvas ref="canvas"></canvas>
+      </div>
     </div>
   </div>
 </template>
@@ -96,12 +106,14 @@ import { onMounted, type Ref, ref, watch } from "vue";
 import { useCanvasStore } from "@/stores/canvas";
 import { useVueFlow } from "@vue-flow/core";
 import _ from "lodash";
+import { useBrushOptionsStore } from "@/stores/brush";
 
 const canvasContainer: Ref<HTMLDivElement | null> = ref(null);
 const resizeOverlay: Ref<HTMLDivElement | null> = ref(null);
 const canvas: Ref<HTMLCanvasElement | null> = ref(null);
 const context: Ref<CanvasRenderingContext2D | null> = ref(null);
 const canvasStore = useCanvasStore();
+const brushOptionsStore = useBrushOptionsStore();
 const vueFlow = useVueFlow();
 
 const props = defineProps<{

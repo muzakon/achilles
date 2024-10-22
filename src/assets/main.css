@@ -39,6 +39,7 @@ body {
 
 .p-tooltip {
   font-size: 12px !important;
+  z-index: 9999 !important;
 }
 
 .p-tooltip-right {
