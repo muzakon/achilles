@@ -94,7 +94,6 @@
 <script setup lang="ts">
 import { onMounted, type Ref, ref, watch } from "vue";
 import { useCanvasStore } from "@/stores/canvas";
-import Toolbar from "./Toolbar.vue";
 import { useVueFlow } from "@vue-flow/core";
 import _ from "lodash";
 
@@ -112,6 +111,7 @@ const props = defineProps<{
   };
   position: Object;
   selected: boolean;
+  selectedTool: string | null;
 }>();
 
 function onEdgeMouseDown($event: MouseEvent, position: string) {

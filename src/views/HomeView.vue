@@ -1,7 +1,10 @@
 <template>
   <div class="w-full h-full">
     <Sidebar />
-    <Toolbar :selected="canvasStore.isNodeSelected" />
+    <Toolbar
+      :selected="canvasStore.isNodeSelected"
+      @change="handleOnSelectedToolChange"
+    />
 
     <VueFlow
       v-model:nodes="nodes"
@@ -24,6 +27,7 @@
             y: canvasStore.currentClickSession.currentMouseY,
           }"
           v-bind="specialNodeProps"
+          :selected-tool="selectedTool"
         />
       </template>
     </VueFlow>
@@ -31,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, type Ref } from "vue";
 import { VueFlow } from "@vue-flow/core";
 import { Background } from "@vue-flow/background";
 import { useCanvasStore } from "@/stores/canvas";
@@ -41,6 +45,8 @@ import PromptSection from "@/components/PromptSection.vue";
 import Sidebar from "@/components/Sidebar.vue";
 
 import CanvasNode from "@/components/CanvasNode.vue";
+
+const selectedTool: Ref<string | null> = ref(null);
 
 // Store
 const canvasStore = useCanvasStore();
@@ -61,6 +67,10 @@ function onCanvasMouseUp($event: MouseEvent) {
       nodes.value[0].selected = true;
     }, 1);
   }
+}
+
+function handleOnSelectedToolChange(tool: string) {
+  selectedTool.value = tool;
 }
 
 const nodes = ref([
