@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from services.motor import MotorService
+from helper.lifespans import MotorLifespan
 
 
 # Routers
@@ -11,10 +11,10 @@ from router.auth import auth_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Start the database connection
-    await MotorService.startup_db_client(app=app)
+    await MotorLifespan.startup_db_client(app=app)
     yield
     # Close the database connection
-    await MotorService.shutdown_db_client(app=app)
+    await MotorLifespan.shutdown_db_client(app=app)
 
 
 app = FastAPI(lifespan=lifespan)

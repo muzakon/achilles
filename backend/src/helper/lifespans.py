@@ -5,7 +5,7 @@ from helper.settings import get_settings
 
 settings = get_settings()
 
-class MotorService:
+class MotorLifespan:
     @staticmethod
     async def startup_db_client(app: FastAPI):
         app.mongodb_client = AsyncIOMotorClient(

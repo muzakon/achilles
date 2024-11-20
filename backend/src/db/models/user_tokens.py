@@ -5,15 +5,11 @@ from typing_extensions import Annotated
 
 PyObjectId = Annotated[str, BeforeValidator(str)]
 
-# TODO: add is_active
-class UserModel(BaseModel):
+class UserTokenModel(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
-    name: str = Field(...)
-    last_name: str = Field(...)
-    email: EmailStr = Field(...)
-    password: str = Field(..., exclude=True)
-    
+    user_id: PyObjectId
+    token: str
 
     @property
     def get_collection_name(self) -> str:
-        return "users"
+        return "user_tokens"
