@@ -12,6 +12,7 @@ class UserModel(BaseModel):
     last_name: str = Field(...)
     email: EmailStr = Field(...)
     password: str = Field(..., exclude=True)
+    is_active: bool = Field(default=True)
     
 
     @property

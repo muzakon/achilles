@@ -79,7 +79,8 @@ class AuthService:
             "name": request_data.name,
             "last_name": request_data.last_name,
             "email": request_data.email,
-            "password": hashed_password
+            "password": hashed_password,
+            "is_active": True
         })
 
         # Retrieve the inserted user document

@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     MONGODB_DATABASE_NAME: str
     JWT_SECRET_KEY: str
     JWT_ALGORITHM: str
+    GCS_BUCKET_NAME: str
     
     model_config = SettingsConfigDict(env_file=".env")
 

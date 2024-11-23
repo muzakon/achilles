@@ -13,7 +13,8 @@
       />
 
       <div class="absolute top-1/2 right-2 transform -translate-y-1/2">
-        <button
+        <v-btn rounded="xl" color="primary" block>Rounded xs</v-btn>
+        <!-- <button
           class="btn-grad py-2 px-4 rounded-full text-[12px] flex items-center justify-center h-[32px] min-w-[120px]"
         >
           <span>
@@ -36,7 +37,7 @@
             </svg>
           </span>
           <span class="ml-2"> Generate </span>
-        </button>
+        </button> -->
       </div>
     </div>
   </div>

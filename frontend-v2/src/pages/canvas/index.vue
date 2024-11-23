@@ -1,12 +1,8 @@
 <template>
   <div class="w-full h-full">
     <!-- <Sidebar /> -->
-    <Toolbar
-      :selected="canvasStore.isNodeSelected"
-      @change="handleOnSelectedToolChange"
-    />
 
-    <Brush />
+    <!-- <Brush /> -->
 
     <div
       class="w-full h-full"
@@ -35,7 +31,12 @@
       >
         <PromptSection />
 
-        <Background color="#ffffff40" :gap="40" :size="2" />
+        <Background
+          color="#00000050"
+          :gap="40"
+          :size="3"
+          bg-color="#00000005"
+        />
         <!-- bind your custom node type to a component by using slots, slot names are always `node-<type>` -->
         <template #node-canvas="specialNodeProps">
           <CanvasNode
@@ -59,12 +60,12 @@ import { Background } from "@vue-flow/background";
 import { useCanvasStore } from "@/stores/canvas";
 import { useBrushOptionsStore } from "@/stores/brush";
 
-import Toolbar from "@/components/Toolbar.vue";
-import PromptSection from "@/components/PromptSection.vue";
-import Sidebar from "@/components/Sidebar.vue";
+//   import Toolbar from "@/components/Toolbar.vue";
+//   import PromptSection from "@/components/PromptSection.vue";
+//   import Sidebar from "@/components/Sidebar.vue";
 
-import CanvasNode from "@/components/CanvasNode.vue";
-import Brush from "@/components/Brush.vue";
+//   import CanvasNode from "@/components/CanvasNode.vue";
+//   import Brush from "@/components/Brush.vue";
 
 const selectedTool: Ref<string | null> = ref(null);
 
