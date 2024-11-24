@@ -2,7 +2,9 @@
   <div class="w-full h-full">
     <!-- <Sidebar /> -->
 
-    <!-- <Brush /> -->
+    <Brush />
+
+    <Toolbar :selected="canvasStore.isNodeSelected" />
 
     <div
       class="w-full h-full"
@@ -60,7 +62,7 @@ import { Background } from "@vue-flow/background";
 import { useCanvasStore } from "@/stores/canvas";
 import { useBrushOptionsStore } from "@/stores/brush";
 
-//   import Toolbar from "@/components/Toolbar.vue";
+import Toolbar from "@/components/Toolbar.vue";
 //   import PromptSection from "@/components/PromptSection.vue";
 //   import Sidebar from "@/components/Sidebar.vue";
 
@@ -90,10 +92,6 @@ function onCanvasMouseUp($event: MouseEvent) {
       nodes.value[0].selected = true;
     }, 1);
   }
-}
-
-function handleOnSelectedToolChange(tool: string) {
-  selectedTool.value = tool;
 }
 
 const nodes = ref([

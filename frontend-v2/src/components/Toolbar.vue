@@ -18,7 +18,7 @@
           {{ item.icon }}
         </span>
       </div>
-      <Divider layout="vertical" />
+      <!-- <Divider layout="vertical" /> -->
       <div
         class="p-2 rounded-full flex items-center justify-center hover:text-purple-500 cursor-pointer hover:bg-neutral-900"
         :class="{
@@ -31,8 +31,6 @@
           {{ item.icon }}
         </span>
       </div>
-
-      <BrushOptions :selected-tool="selectedItem" />
     </div>
   </div>
 </template>
@@ -40,13 +38,13 @@
 <script setup lang="ts">
 import { ref, watch, type Ref } from "vue";
 import _ from "lodash";
-import Divider from "primevue/divider";
-import BrushOptions from "./BrushOptions.vue";
 import { useVueFlow } from "@vue-flow/core";
+import { useBrushOptionsStore } from "@/stores/brush";
 
 const props = defineProps<{
   selected: boolean;
 }>();
+const brushOptionsStore = useBrushOptionsStore();
 const menuItems = ref([
   {
     icon: "drag_pan",
@@ -92,10 +90,6 @@ const selectedItem: Ref<string | null> = ref("drag-pan");
 const toolbarSection: Ref<HTMLDivElement | null> = ref(null);
 const vueFlow = useVueFlow();
 
-const emit = defineEmits<{
-  (e: "change", tool: string): void;
-}>();
-
 function selectTool(value: string) {
   selectedItem.value = value;
 
@@ -119,7 +113,7 @@ function selectTool(value: string) {
         break;
     }
 
-    emit("change", selectedItem.value);
+    brushOptionsStore.brushOptions.mode = selectedItem.value;
   }
 }
 </script>
