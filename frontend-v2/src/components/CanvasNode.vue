@@ -8,7 +8,13 @@
 
     <div
       ref="canvasContainer"
-      class="bg-neutral-100 relative canvasContainer"
+      class="bg-neutral-300 relative canvasContainer hover:scale-[1.01] transition duration-200"
+      :class="{
+        '!cursor-none':
+          ['draw', 'draw-mask', 'eraser'].includes(
+            brushOptionsStore.getCurrentBrushMode
+          ) && !canvasStore.currentCanvasImage,
+      }"
       :selected="canvasStore.isNodeSelected"
     >
       <div v-if="canvasStore.isNodeSelected && canvasStore.currentCanvasImage">
@@ -86,15 +92,7 @@
         </div>
       </div>
 
-      <div
-        v-if="canvasStore.currentCanvasImage"
-        :class="{
-          'cursor-none': ['draw', 'draw-mask', 'eraser'].includes(
-            brushOptionsStore.getCurrentBrushMode
-          ),
-        }"
-        class="relative"
-      >
+      <div v-if="canvasStore.currentCanvasImage" class="relative">
         <DrawCanvas
           :position="position"
           :selected-tool="brushOptionsStore.getCurrentBrushMode"

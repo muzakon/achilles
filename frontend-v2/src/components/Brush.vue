@@ -2,7 +2,7 @@
   <div
     id="__brush"
     ref="brush"
-    class="absolute z-[9] border-2 rounded-full border-dashed border-white transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+    class="absolute z-[9] border-2 rounded-full border-dashed border-black transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
     :style="{
       width: getBrushOptions.size + 'px',
       height: getBrushOptions.size + 'px',

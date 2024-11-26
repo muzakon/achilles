@@ -26,12 +26,7 @@
         @mouseenter="VueFlowService.onCanvasMouseEnter"
         @mouseleave="VueFlowService.onCanvasMouseLeave"
       >
-        <Background
-          color="#00000065"
-          :gap="40"
-          :size="3"
-          bg-color="#00000025"
-        />
+        <Background pattern-color="#00000035" :gap="40" :size="3" />
         <template #node-canvas="specialNodeProps">
           <CanvasNode
             :mouse-position="{

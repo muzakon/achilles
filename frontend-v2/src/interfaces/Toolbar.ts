@@ -5,6 +5,7 @@ export interface MenuItem {
   icon: string; // Icon identifier (e.g., 'drag_pan', 'stylus_note', etc.)
   title: string; // Title of the menu item (e.g., 'Drag Pan', 'Draw', etc.)
   id: BrushMode; // Unique identifier for the menu item (e.g., 'drag-pan', 'draw', etc.)
+  showMenu: boolean
 }
 
 // Interface for a single menu button (action like download, add to favorites, etc.)

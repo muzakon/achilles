@@ -4,22 +4,39 @@
     class="absolute top-5 transform -translate-x-1/2 left-1/2 z-[9999] bg-white p-1 rounded-full justify-center border border-white/10"
   >
     <div class="relative flex items-center">
-      <div
+      <v-menu
         v-for="(item, index) in menuItems"
         :key="index"
-        class="p-2 rounded-full flex items-center justify-center hover:text-neutral-900 cursor-pointer hover:bg-neutral-200 transition duration-200"
-        :class="{
-          '!text-neutral-900 bg-neutral-200':
-            item.id === brushOptionsStore.getCurrentBrushMode,
-          'text-neutral-400': item.id !== brushOptionsStore.getCurrentBrushMode,
-          'mr-1': index !== menuItems.length - 1,
-        }"
-        @click="selectTool(item.id)"
+        v-model="item.showMenu"
+        :close-on-content-click="false"
+        location="bottom center"
+        :offset="[10, 0]"
       >
-        <span class="material-symbols-outlined text-[24px]">
-          {{ item.icon }}
-        </span>
-      </div>
+        <template v-slot:activator="{ props }">
+          <div
+            v-bind="props"
+            class="p-2 rounded-full flex items-center justify-center hover:text-neutral-900 cursor-pointer hover:bg-neutral-200 transition duration-200"
+            :class="{
+              '!text-neutral-900 bg-neutral-200':
+                item.id === brushOptionsStore.getCurrentBrushMode,
+              'text-neutral-400':
+                item.id !== brushOptionsStore.getCurrentBrushMode,
+              'mr-1': index !== menuItems.length - 1,
+            }"
+            @click="selectTool(item.id, index)"
+          >
+            <span class="material-symbols-outlined text-[24px]">
+              {{ item.icon }}
+            </span>
+          </div>
+        </template>
+
+        <v-card max-width="210">
+          <DrawToolMenu
+            v-if="brushOptionsStore.getCurrentBrushMode === 'draw'"
+          />
+        </v-card>
+      </v-menu>
 
       <v-divider
         class="mx-3 border-gray-700"
@@ -39,6 +56,10 @@
         <span class="material-symbols-outlined text-[24px]">
           {{ item.icon }}
         </span>
+
+        <v-tooltip activator="parent" location="bottom">
+          {{ item.title }}
+        </v-tooltip>
       </div>
     </div>
   </div>
@@ -53,6 +74,7 @@ import {
   type MenuButton,
   type MenuItem,
 } from "@/interfaces/Toolbar";
+import DrawToolMenu from "./toolbar/DrawToolMenu.vue";
 
 // Store for managing brush options globally (reactive store).
 const brushOptionsStore = useBrushOptionsStore();
@@ -60,10 +82,15 @@ const { setBrushOptions } = brushOptionsStore;
 
 // Menu items for different tools and their associated icons and titles.
 const menuItems: Ref<MenuItem[]> = ref([
-  { icon: "drag_pan", title: "Drag Pan", id: "drag-pan" },
-  { icon: "stylus_note", title: "Draw", id: "draw" },
-  { icon: "ink_eraser", title: "Eraser", id: "eraser" },
-  { icon: "filter_tilt_shift", title: "Draw Mask", id: "draw-mask" },
+  { icon: "drag_pan", title: "Drag Pan", id: "drag-pan", showMenu: false },
+  { icon: "stylus_note", title: "Draw", id: "draw", showMenu: false },
+  { icon: "ink_eraser", title: "Eraser", id: "eraser", showMenu: false },
+  {
+    icon: "filter_tilt_shift",
+    title: "Draw Mask",
+    id: "draw-mask",
+    showMenu: false,
+  },
 ]);
 
 // Button items for additional actions like downloading, adding to favorites, etc.
@@ -72,9 +99,6 @@ const menuButtons: Ref<MenuButton[]> = ref([
   { icon: "favorite", title: "Add to favorites" },
   { icon: "bookmarks", title: "Add to collection" },
 ]);
-
-// Reactive reference to store the currently selected tool mode (BrushMode).
-const selectedItem: Ref<BrushMode> = ref("drag-pan");
 
 // Reference to the toolbar section DOM element (optional use in the template).
 const toolbarSection: Ref<HTMLDivElement | null> = ref(null);
@@ -88,16 +112,26 @@ const vueFlow = useVueFlow();
  *
  * @param {BrushMode} value - The selected brush mode (tool).
  */
-function selectTool(value: BrushMode): void {
+function selectTool(value: BrushMode, index: number): void {
   // Retrieve the base node from Vue Flow to modify its properties based on the selected tool.
   const node = vueFlow.findNode("base");
+  setBrushOptions({
+    ...brushOptionsStore.getBrushOptions,
+    mode: value,
+  });
+
+  for (let i = 0; i < menuItems.value.length; i++) {
+    menuItems.value[i].showMenu = false;
+  }
+  menuItems.value[index].showMenu = true;
 
   if (node) {
     // Adjust the node's properties based on the selected brush mode.
-    switch (selectedItem.value) {
+    switch (brushOptionsStore.getCurrentBrushMode) {
       case "drag-pan":
         node.selectable = true;
         node.draggable = true;
+        console.log("test");
         break;
       case "draw":
       case "eraser":
@@ -105,16 +139,11 @@ function selectTool(value: BrushMode): void {
         node.selectable = false;
         node.draggable = false;
         node.selected = false;
+        console.log("test");
         break;
       default:
         break;
     }
-
-    // Update the global brush options store with the selected mode.
-    setBrushOptions({
-      ...brushOptionsStore.getBrushOptions,
-      mode: value,
-    });
   }
 }
 </script>

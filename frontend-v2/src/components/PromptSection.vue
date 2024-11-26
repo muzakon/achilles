@@ -5,9 +5,9 @@
   >
     <div class="w-[900px] relative">
       <input
-        class="p-4 text-[13px] outline-0 w-full rounded-full h-[48px] bg-neutral-100 border focus:bg-neutral-200 hover:bg-neutral-200 transition duration-200 placeholder-[#00000065] text-neutral-600"
-        type="text"
         v-model="prompt"
+        class="p-4 text-[13px] outline-0 w-full rounded-full h-[48px] bg-white border focus:!border-neutral-700 transition duration-200 placeholder-[#00000065] text-neutral-600 promptInput"
+        type="text"
         style="resize: none"
         placeholder="Prompt..."
       />
@@ -15,12 +15,13 @@
       <div class="absolute top-1/2 right-2 transform -translate-y-1/2">
         <v-btn
           rounded="xl"
-          color="primary"
+          color="grey-darken-4"
           :loading="loading"
-          @click="generateImageByPrompt"
           :disabled="!prompt"
-          >Generate</v-btn
+          @click="generateImageByPrompt"
         >
+          Generate
+        </v-btn>
       </div>
     </div>
   </div>
@@ -39,7 +40,7 @@ const canvasStore = useCanvasStore();
 const { setCurrentCanvasImage } = canvasStore;
 
 async function generateImageByPrompt() {
-  if (prompt) {
+  if (prompt.value) {
     try {
       loading.value = true;
       const data = await Api.generateImageByPrompt(prompt.value);
@@ -53,4 +54,9 @@ async function generateImageByPrompt() {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.promptInput {
+  box-shadow: 0 0 3px 0 rgba(0 0 0 / 12%), 0 3px 8px 0 rgba(0 0 0 / 4%),
+    0 4px 16px 0 rgba(0 0 0 / 8%);
+}
+</style>

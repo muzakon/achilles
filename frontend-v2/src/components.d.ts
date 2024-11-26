@@ -9,9 +9,12 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
     Brush: typeof import('./components/Brush.vue')['default']
+    BrushMenu: typeof import('./components/toolbar/BrushMenu.vue')['default']
     BrushOptions: typeof import('./components/BrushOptions.vue')['default']
+    Button: typeof import('./components/toolbar/Button.vue')['default']
     CanvasNode: typeof import('./components/CanvasNode.vue')['default']
     DrawCanvas: typeof import('./components/canvas/DrawCanvas.vue')['default']
+    DrawToolMenu: typeof import('./components/toolbar/DrawToolMenu.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     ImageCanvas: typeof import('./components/canvas/ImageCanvas.vue')['default']
     MaskImage: typeof import('./components/canvas/MaskImage.vue')['default']
@@ -19,6 +22,8 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sidebar: typeof import('./components/Sidebar.vue')['default']
+    SubMenu: typeof import('./components/toolbar/SubMenu.vue')['default']
     Toolbar: typeof import('./components/Toolbar.vue')['default']
+    ToolbarButton: typeof import('./components/toolbar/ToolbarButton.vue')['default']
   }
 }
