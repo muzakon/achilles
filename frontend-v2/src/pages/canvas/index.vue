@@ -71,6 +71,10 @@ const brushOptionsStore = useBrushOptionsStore();
 const vueFlowStore = useVueFlow();
 
 vueFlowStore.onInit(() => {
+  vueFlowStore.fitView({
+    maxZoom: 1,
+    minZoom: 1,
+  });
   console.log("Vue Flow successfully loaded.");
 });
 

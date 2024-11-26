@@ -1,25 +1,25 @@
 <template>
   <div>
     <div
-      class="resizeOverlay absolute z-[-1]"
-      ref="resizeOverlay"
       v-if="canvasStore.isNodeSelected"
-    ></div>
+      ref="resizeOverlay"
+      class="resizeOverlay absolute z-[-1]"
+    />
 
     <div
-      class="bg-neutral-950 relative canvasContainer"
       ref="canvasContainer"
+      class="bg-neutral-100 relative canvasContainer"
       :selected="canvasStore.isNodeSelected"
     >
-      <div v-if="canvasStore.isNodeSelected">
+      <div v-if="canvasStore.isNodeSelected && canvasStore.currentCanvasImage">
         <div
-          @mousedown="onEdgeMouseDown($event, 'top-left')"
           id="__left_top_selector"
           className="w-[24px] h-[24px]  rounded-full absolute left-[-11px] top-[-11px] hover:bg-[#d946ef40] transition duration-200 cursor-nwse-resize z-[20]"
+          @mousedown="onEdgeMouseDown($event, 'top-left')"
         >
           <div
-            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-          ></div>
+            className="w-[6px] h-[6px] bg-pink-500 border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          />
         </div>
 
         <div
@@ -27,8 +27,8 @@
           className="w-[24px] h-[24px]  rounded-full absolute right-[-11px] top-[-11px] hover:bg-[#d946ef40] transition duration-200 cursor-nesw-resize	z-[20]"
         >
           <div
-            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-          ></div>
+            className="w-[6px] h-[6px] bg-pink-500 border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          />
         </div>
 
         <div
@@ -36,8 +36,8 @@
           className="w-[24px] h-[24px]  rounded-full absolute left-[-11px] bottom-[-11px] hover:bg-[#d946ef40] transition duration-200 cursor-nesw-resize z-[20]"
         >
           <div
-            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-          ></div>
+            className="w-[6px] h-[6px] bg-pink-500 border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          />
         </div>
 
         <div
@@ -45,8 +45,8 @@
           className="w-[24px] h-[24px]  rounded-full absolute right-[-11px] bottom-[-11px] hover:bg-[#d946ef40] transition duration-200 cursor-nwse-resize z-[20]"
         >
           <div
-            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-          ></div>
+            className="w-[6px] h-[6px] bg-pink-500 border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          />
         </div>
 
         <div
@@ -54,8 +54,8 @@
           className="w-[24px] h-[24px]  rounded-full absolute top-[-11px] left-1/2 hover:bg-[#d946ef40] transition duration-200 transform -translate-x-1/2 cursor-ns-resize	z-[20]"
         >
           <div
-            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-          ></div>
+            className="w-[6px] h-[6px] bg-pink-500 border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          />
         </div>
 
         <div
@@ -63,8 +63,8 @@
           className="w-[24px] h-[24px]  rounded-full absolute bottom-[-11px] left-1/2 hover:bg-[#d946ef40] transition duration-200 transform -translate-x-1/2 cursor-ns-resize	z-[20]"
         >
           <div
-            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-          ></div>
+            className="w-[6px] h-[6px] bg-pink-500 border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          />
         </div>
 
         <div
@@ -72,8 +72,8 @@
           className="w-[24px] h-[24px]  rounded-full absolute top-1/2 left-[-11px] hover:bg-[#d946ef40] transition duration-200 transform -translate-y-1/2 cursor-ew-resize	z-[20]"
         >
           <div
-            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-          ></div>
+            className="w-[6px] h-[6px] bg-pink-500 border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          />
         </div>
 
         <div
@@ -81,21 +81,28 @@
           className="w-[24px] h-[24px]  rounded-full absolute top-1/2 right-[-11px] hover:bg-[#d946ef40] transition duration-200 transform -translate-y-1/2 cursor-ew-resize	z-[20]"
         >
           <div
-            className="w-[6px] h-[6px] bg-[#0a0a0a] border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
-          ></div>
+            className="w-[6px] h-[6px] bg-pink-500 border  border-[#AF11C7] rounded-full absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[3]"
+          />
         </div>
       </div>
 
       <div
+        v-if="canvasStore.currentCanvasImage"
         :class="{
-          'cursor-none': selectedTool
-            ? ['draw', 'draw-mask', 'eraser'].includes(selectedTool)
-            : false,
+          'cursor-none': ['draw', 'draw-mask', 'eraser'].includes(
+            brushOptionsStore.getCurrentBrushMode
+          ),
         }"
         class="relative"
       >
-        <DrawCanvas :position="position" :selectedTool="selectedTool" />
-        <ImageCanvas :position="position" :selectedTool="selectedTool" />
+        <DrawCanvas
+          :position="position"
+          :selected-tool="brushOptionsStore.getCurrentBrushMode"
+        />
+        <ImageCanvas
+          :position="position"
+          :selected-tool="brushOptionsStore.getCurrentBrushMode"
+        />
         <MaskImage />
       </div>
     </div>
@@ -111,9 +118,12 @@ import _ from "lodash";
 import DrawCanvas from "./canvas/DrawCanvas.vue";
 import ImageCanvas from "./canvas/ImageCanvas.vue";
 import MaskImage from "./canvas/MaskImage.vue";
+import { useBrushOptionsStore } from "@/stores/brush";
 
 const canvasContainer: Ref<HTMLDivElement | null> = ref(null);
 const resizeOverlay: Ref<HTMLDivElement | null> = ref(null);
+
+const brushOptionsStore = useBrushOptionsStore();
 const canvasStore = useCanvasStore();
 const vueFlow = useVueFlow();
 
@@ -122,9 +132,8 @@ const props = defineProps<{
     x: number;
     y: number;
   };
-  position: Object;
+  position: object;
   selected: boolean;
-  selectedTool: string | null;
 }>();
 
 function onEdgeMouseDown($event: MouseEvent, position: string) {
@@ -231,10 +240,21 @@ watch(
 
 watch(
   () => props.selected,
-  _.debounce((newValue) => {
+  _.debounce((newValue: boolean) => {
     canvasStore.isNodeSelected = newValue;
   }, 2)
 );
+
+onMounted(() => {
+  setCanvasContainerSize(
+    canvasStore.canvasSize.width,
+    canvasStore.canvasSize.height
+  );
+  setResizeOverlaySize(
+    canvasStore.canvasSize.width,
+    canvasStore.canvasSize.height
+  );
+});
 </script>
 
 <style lang="scss" scoped>

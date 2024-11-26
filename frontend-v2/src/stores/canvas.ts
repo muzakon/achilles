@@ -30,8 +30,8 @@ export const useCanvasStore = defineStore("canvas", () => {
 
   // Size of the canvas, used to manage layout and rendering.
   const canvasSize = ref({
-    width: 0,
-    height: 0,
+    width: 450,
+    height: 600,
   });
 
   // Optional image data for the canvas (could be the data URL of an image or null).
