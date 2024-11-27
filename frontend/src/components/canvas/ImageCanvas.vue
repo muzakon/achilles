@@ -31,6 +31,24 @@ function drawCanvasImage(image: HTMLImageElement) {
   }
 }
 
+function setCanvasImage(url: string) {
+  const defaultImage = new Image();
+  defaultImage.src = url;
+  // defaultImage.setAttribute("crossOrigin", "");
+
+  defaultImage.onload = () => {
+    const width = defaultImage.width;
+    const height = defaultImage.height;
+
+    useCanvasStore().canvasSize = { width, height };
+    setCanvasSize(
+      useCanvasStore().canvasSize.width,
+      useCanvasStore().canvasSize.height
+    );
+    drawCanvasImage(defaultImage);
+  };
+}
+
 onMounted(() => {
   if (canvas.value) {
     context.value = canvas.value.getContext("2d");
@@ -38,24 +56,17 @@ onMounted(() => {
       context.value.imageSmoothingEnabled = false;
       context.value.imageSmoothingQuality = "high";
     }
-
-    const defaultImage = new Image();
-    defaultImage.src = canvasStore.currentCanvasImage;
-    // defaultImage.setAttribute("crossOrigin", "");
-
-    defaultImage.onload = () => {
-      const width = defaultImage.width;
-      const height = defaultImage.height;
-
-      useCanvasStore().canvasSize = { width, height };
-      setCanvasSize(
-        useCanvasStore().canvasSize.width,
-        useCanvasStore().canvasSize.height
-      );
-      drawCanvasImage(defaultImage);
-    };
   }
 });
+
+watch(
+  () => canvasStore.currentCanvasImage,
+  (newValue: any) => {
+    if (newValue) {
+      setCanvasImage(newValue);
+    }
+  }
+);
 </script>
 
 <style lang="scss" scoped></style>

@@ -20,18 +20,21 @@ const canvasStore = useCanvasStore();
 const imageWidth: Ref<number> = ref(0);
 const imageHeight: Ref<number> = ref(0);
 
-onMounted(() => {
-  const defaultImage = new Image();
-  defaultImage.src = canvasStore.currentCanvasImage;
+watch(
+  () => canvasStore.currentCanvasImage,
+  () => {
+    const defaultImage = new Image();
+    defaultImage.src = canvasStore.currentCanvasImage;
 
-  defaultImage.onload = () => {
-    imageWidth.value = defaultImage.width;
-    imageHeight.value = defaultImage.height;
-  };
-});
+    defaultImage.onload = () => {
+      imageWidth.value = defaultImage.width;
+      imageHeight.value = defaultImage.height;
+    };
+  }
+);
 </script>
 
-<style scoped lang="less">
+<style scoped lang="scss">
 #maskContainer {
   &::after {
     position: absolute;

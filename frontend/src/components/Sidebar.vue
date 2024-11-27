@@ -317,16 +317,6 @@
 </template>
 
 <script setup lang="ts">
-import AutoComplete from "primevue/autocomplete";
-import Slider from "primevue/slider";
-import InputGroup from "primevue/inputgroup";
-import InputGroupAddon from "primevue/inputgroupaddon";
-import InputNumber from "primevue/inputnumber";
-import Accordion from "primevue/accordion";
-import AccordionPanel from "primevue/accordionpanel";
-import AccordionHeader from "primevue/accordionheader";
-import AccordionContent from "primevue/accordioncontent";
-
 import { ref } from "vue";
 const models = ref([]);
 const selectedModel = ref(null);
@@ -338,7 +328,7 @@ const search = (event) => {
 };
 </script>
 
-<style scoped lang="less">
+<style scoped lang="scss">
 .sidebar {
   height: calc(100% - 33px);
 }
