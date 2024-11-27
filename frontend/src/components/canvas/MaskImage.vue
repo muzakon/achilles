@@ -5,7 +5,7 @@
     :style="{
       width: imageWidth + 'px',
       height: imageHeight + 'px',
-      backgroundImage: `url('${canvasStore.currentCanvasImage}')`,
+      backgroundImage: `url('${props.canvasImage}')`,
     }"
   >
     <div></div>
@@ -19,17 +19,25 @@ import { onMounted, type Ref, ref } from "vue";
 const canvasStore = useCanvasStore();
 const imageWidth: Ref<number> = ref(0);
 const imageHeight: Ref<number> = ref(0);
+const props = defineProps<{
+  canvasImage: string | null;
+}>();
 
 watch(
-  () => canvasStore.currentCanvasImage,
-  () => {
-    const defaultImage = new Image();
-    defaultImage.src = canvasStore.currentCanvasImage;
+  () => props.canvasImage,
+  (newValue) => {
+    if (newValue) {
+      const defaultImage = new Image();
+      defaultImage.src = newValue;
 
-    defaultImage.onload = () => {
-      imageWidth.value = defaultImage.width;
-      imageHeight.value = defaultImage.height;
-    };
+      defaultImage.onload = () => {
+        imageWidth.value = defaultImage.width;
+        imageHeight.value = defaultImage.height;
+      };
+    }
+  },
+  {
+    immediate: true,
   }
 );
 </script>

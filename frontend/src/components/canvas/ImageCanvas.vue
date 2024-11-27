@@ -13,7 +13,8 @@ const context: Ref<CanvasRenderingContext2D | null> = ref(null);
 const canvasStore = useCanvasStore();
 
 const props = defineProps<{
-  selectedTool: string | null;
+  selectedTool: string;
+  canvasImage: string | null;
 }>();
 
 function setCanvasSize(width: number, height: number) {
@@ -60,11 +61,14 @@ onMounted(() => {
 });
 
 watch(
-  () => canvasStore.currentCanvasImage,
+  () => props.canvasImage,
   (newValue: any) => {
     if (newValue) {
       setCanvasImage(newValue);
     }
+  },
+  {
+    immediate: true,
   }
 );
 </script>

@@ -33,6 +33,7 @@
               x: canvasStore.currentClickSession.currentMouseX,
               y: canvasStore.currentClickSession.currentMouseY,
             }"
+            :canvas-image="canvasStore.currentCanvasImage"
             v-bind="specialNodeProps"
             :selected-tool="brushOptionsStore.brushOptions.mode"
           />

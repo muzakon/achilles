@@ -8,16 +8,17 @@
 
     <div
       ref="canvasContainer"
-      class="bg-neutral-300 relative canvasContainer hover:scale-[1.01] transition duration-200"
+      class="bg-neutral-300 relative canvasContainer transition duration-200"
       :class="{
         '!cursor-none':
           ['draw', 'draw-mask', 'eraser'].includes(
             brushOptionsStore.getCurrentBrushMode
-          ) && !canvasStore.currentCanvasImage,
+          ) && !canvasImage,
+        'hover:scale-[1.01]': !props.canvasImage,
       }"
       :selected="canvasStore.isNodeSelected"
     >
-      <div v-if="canvasStore.isNodeSelected && canvasStore.currentCanvasImage">
+      <div v-if="canvasStore.isNodeSelected && canvasImage">
         <div
           id="__left_top_selector"
           className="w-[24px] h-[24px]  rounded-full absolute left-[-11px] top-[-11px] hover:bg-[#d946ef40] transition duration-200 cursor-nwse-resize z-[20]"
@@ -92,7 +93,7 @@
         </div>
       </div>
 
-      <div v-if="canvasStore.currentCanvasImage" class="relative">
+      <div v-if="canvasImage" class="relative">
         <DrawCanvas
           :position="position"
           :selected-tool="brushOptionsStore.getCurrentBrushMode"
@@ -100,8 +101,9 @@
         <ImageCanvas
           :position="position"
           :selected-tool="brushOptionsStore.getCurrentBrushMode"
+          :canvas-image="canvasImage"
         />
-        <MaskImage />
+        <MaskImage :canvas-image="canvasImage" />
       </div>
     </div>
   </div>
@@ -132,6 +134,7 @@ const props = defineProps<{
   };
   position: object;
   selected: boolean;
+  canvasImage: string | null;
 }>();
 
 function onEdgeMouseDown($event: MouseEvent, position: string) {

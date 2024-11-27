@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { type Ref, ref } from "vue";
+import { ref } from "vue";
 import Api from "@/services/Api";
 import { useCanvasStore } from "@/stores/canvas";
 
@@ -36,15 +36,12 @@ const prompt = ref("");
 const loading = ref(false);
 const canvasStore = useCanvasStore();
 
-// Store Functions
-const { setCurrentCanvasImage } = canvasStore;
-
 async function generateImageByPrompt() {
   if (prompt.value) {
     try {
       loading.value = true;
       const data = await Api.generateImageByPrompt(prompt.value);
-      setCurrentCanvasImage(data.url);
+      canvasStore.currentCanvasImage = data.url;
     } catch (error) {
       console.log(error);
     } finally {
