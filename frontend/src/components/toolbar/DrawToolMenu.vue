@@ -1,6 +1,8 @@
 <template>
   <div>
     <div>
+      <h1 class="mb-4 font-semibold text-[14px] text-neutral-700">Draw</h1>
+
       <div
         class="rounded-full h-[28px] w-[28px] inline-flex justify-center items-center cursor-pointer hover:bg-neutral-200 mr-0.5 mb-0.5 transition duration-200"
         v-for="(color, index) in colors"
@@ -62,9 +64,6 @@ const colors: Ref<string[]> = ref([]);
 onMounted(() => {
   colors.value = commonColors;
 });
-// const emits = defineEmits<{
-//   (e: "changePin", value: boolean): void;
-// }>();
 
 function selectColor(color: string) {
   setBrushOptions({ ...brushStore.getBrushOptions, color: color });
