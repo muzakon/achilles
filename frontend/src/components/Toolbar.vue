@@ -8,7 +8,7 @@
         <div
           v-for="(item, index) in menuItems"
           :key="index"
-          class="p-2 rounded-full flex items-center justify-center hover:text-neutral-900 cursor-pointer hover:bg-neutral-200 transition duration-200"
+          class="p-2 rounded-full flex items-center justify-center hover:text-neutral-900 cursor-pointer hover:bg-neutral-200 transition duration-200 select-none"
           :class="{
             '!text-neutral-900 bg-neutral-200':
               item.id === brushOptionsStore.getCurrentBrushMode,

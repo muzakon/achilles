@@ -10,10 +10,9 @@
       ref="canvasContainer"
       class="bg-neutral-300 relative canvasContainer transition duration-200"
       :class="{
-        '!cursor-none':
-          ['draw', 'draw-mask', 'eraser'].includes(
-            brushOptionsStore.getCurrentBrushMode
-          ) && !canvasImage,
+        '!cursor-none': ['draw', 'draw-mask', 'eraser'].includes(
+          brushOptionsStore.getCurrentBrushMode
+        ),
         'hover:scale-[1.01]': !props.canvasImage,
       }"
       :selected="canvasStore.isNodeSelected"
