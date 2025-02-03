@@ -1,10 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { GenerateImageDto } from "./dto/generate-image.dto";
-import { Image, ImageDocument } from "./schemas/image.schema";
+import { GenerateImageDto, FalRequestStatusDto } from "./image.dto";
+import { Image, ImageDocument } from "./image.schema";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { FalAiWrapper } from "src/lib/fal_ai";
-import { FalRequestStatusDto } from "./dto/processing-image.dto";
 import { QueueStatus, Result } from "@fal-ai/client";
 
 @Injectable()
@@ -41,6 +40,8 @@ export class ImageService {
 		const createdImage = new this.imageModel({
 			...data,
 			requestId,
+			model: data.selectedModel,
+			cretedAt: Math.round(+new Date() / 1000),
 		});
 		return await createdImage.save();
 	}

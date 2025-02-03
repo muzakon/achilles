@@ -9,6 +9,9 @@ export class Image {
 	prompt: string;
 
 	@Prop()
+	model: string;
+
+	@Prop()
 	requestId: string;
 
 	@Prop()

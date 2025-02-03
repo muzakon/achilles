@@ -1,7 +1,6 @@
 import { Controller, Post, Body, Get } from "@nestjs/common";
 import { ImageService } from "./image.service";
-import { GenerateImageDto } from "./dto/generate-image.dto";
-import { FalRequestStatusDto } from "./dto/processing-image.dto";
+import { GenerateImageDto, FalRequestStatusDto } from "./image.dto";
 
 @Controller("image")
 export class ImageController {

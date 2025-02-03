@@ -29,3 +29,11 @@ export class GenerateImageDto {
 	@Max(4)
 	numImages: number;
 }
+
+export class FalRequestStatusDto {
+	@IsNotEmpty()
+	selectedModel: string;
+
+	@IsNotEmpty()
+	requestId: string;
+}
