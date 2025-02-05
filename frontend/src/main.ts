@@ -21,14 +21,10 @@ import "@/assets/main.scss";
 import "@vue-flow/core/dist/style.css";
 import "@vue-flow/core/dist/theme-default.css";
 
-// Plugins
-import api from "./helper/Axios";
+import 'notivue/notification.css'
+import 'notivue/animations.css'
 
 const app = createApp(App);
 
-// Prototypes
-app.provide("$api", api);
-
 registerPlugins(app);
-
 app.mount("#app");

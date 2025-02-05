@@ -1,4 +1,5 @@
 import axios from "axios";
+import { push } from "notivue";
 
 // Create an Axios instance
 const api = axios.create({
@@ -15,17 +16,19 @@ api.interceptors.response.use(
   (error) => {
     // Check if the error response is a 400
     if (error.response && error.response.status === 400) {
-      console.error("Error 400: Bad Request", error.response.data);
+      push.error(error.response.data);
     }
 
     // You can add more specific error handling based on other status codes if necessary
     if (error.response && error.response.status === 500) {
-      console.error("Error 500: Server Error", error.response.data);
+      push.error(
+        "An error occured when trying to perform your request. Please try again later."
+      );
     }
 
     // If no error response, just log the error
     if (!error.response) {
-      console.error("Network Error:", error.message);
+      push.error("Network error occured. Please try again later.");
     }
 
     // You can return the error so the promise chain can handle it (optional)

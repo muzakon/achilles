@@ -1,20 +1,45 @@
 import api from "@/helper/Axios"; // Importing the Axios instance for making API requests
+import type { Ref } from "vue";
 
 /**
  * Api class is responsible for handling API requests related to image generation.
  * This class contains methods to interact with the backend for generating images based on a text prompt.
  */
 class Api {
-  /**
-   * Generates an image based on the given text prompt.
-   *
-   * @param prompt - The text prompt used to generate the image. This should be a string describing the image you want to create.
-   *
-   * @returns The API response data, which typically contains the generated image URL or other image details.
-   *          In case of an error, the error object is returned.
-   *
-   * @throws Will throw an error if the API request fails or the response is not successful.
-   */
+  changeLoadingStatus(loadingInstance: Ref<boolean> | null = null) {
+    if (loadingInstance !== null) {
+      loadingInstance.value = !loadingInstance.value;
+    }
+  }
+  async generateRequest(
+    method: string,
+    url: string,
+    params: object | null,
+    data: object | null,
+    loadingInstance: Ref<boolean> | null = null
+  ) {
+    try {
+      const headers = {
+        Authorization: `Bearer test`,
+      };
+
+      this.changeLoadingStatus(loadingInstance);
+      const response = await api.request({
+        method,
+        url,
+        headers,
+        params,
+        data,
+      });
+
+      return response.data;
+    } catch {
+      return null;
+    } finally {
+      this.changeLoadingStatus(loadingInstance);
+    }
+  }
+  
   static async generateImageByPrompt(prompt: string) {
     try {
       // Create the data object to be sent in the POST request
