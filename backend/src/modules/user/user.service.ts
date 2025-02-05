@@ -3,7 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { User, UserDocument } from "./user.schema";
 import { Model } from "mongoose";
 import { CreateUserDto, LoginUserDto } from "./user.dto";
-import { AuthResponse } from "./user.interfaces";
+import { AuthResponse, TokenPayload } from "./user.interfaces";
 import { JwtService } from "@nestjs/jwt";
 import * as dayjs from "dayjs";
 import * as bcrypt from "bcrypt";
@@ -57,8 +57,8 @@ export class UserService {
 			password: hashedPassword,
 		});
 
-		const payload = { sub: user._id, username: user.email };
-		const accessTokenExpiresIn = 5 * 60000; // 5 minutes
+		const payload: TokenPayload = { sub: user._id, email: user.email };
+		const accessTokenExpiresIn = 1 * 60; // 5 minutes
 		const accessToken = await this.jwtService.signAsync(payload, {
 			expiresIn: accessTokenExpiresIn,
 		});
@@ -94,8 +94,8 @@ export class UserService {
 			);
 		}
 
-		const payload = { sub: user._id, username: user.email };
-		const accessTokenExpiresIn = 5 * 60000; // 5 minutes
+		const payload: TokenPayload = { sub: user._id, email: user.email };
+		const accessTokenExpiresIn = 1 * 60; // 5 minutes
 		const accessToken = await this.jwtService.signAsync(payload, {
 			expiresIn: accessTokenExpiresIn,
 		});

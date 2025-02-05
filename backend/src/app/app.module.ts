@@ -7,7 +7,10 @@ import { IndexModule } from "../modules/index.module";
 import { MongooseModule } from "@nestjs/mongoose";
 
 // Config
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { JwtService } from "@nestjs/jwt";
+import { APP_GUARD } from "@nestjs/core";
+import { AuthGuard } from "../guards/Auth";
 
 const ENV_FILE =
 	process.env.NODE_ENV == "production" ? ".env.production" : ".env.development";
@@ -22,6 +25,14 @@ const ENV_FILE =
 		MongooseModule.forRoot("mongodb://localhost/27017"),
 	],
 	controllers: [AppController],
-	providers: [AppService],
+	providers: [
+		AppService,
+		ConfigService,
+		JwtService,
+		{
+			provide: APP_GUARD,
+			useClass: AuthGuard,
+		},
+	],
 })
 export class AppModule {}

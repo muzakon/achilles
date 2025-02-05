@@ -1,7 +1,9 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto, LoginUserDto } from "./user.dto";
+import { Public } from "../../guards/Auth";
 
+@Public()
 @Controller("user")
 export class UserController {
 	constructor(private userService: UserService) {}
