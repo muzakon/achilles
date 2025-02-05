@@ -16,8 +16,6 @@ export class AuthService extends Api {
             loadingInstance
         )
 
-        if(response) {
-            console.log(response)
-        }
+        return response
     }
 }

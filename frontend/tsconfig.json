@@ -7,5 +7,7 @@
     {
       "path": "./tsconfig.app.json"
     }
-  ]
+  ],
+  "esModuleInterop": true,
+  "allowSyntheticDefaultImports": true
 }

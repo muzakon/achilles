@@ -16,11 +16,13 @@ declare module 'vue' {
     DrawToolMenu: typeof import('./components/toolbar/DrawToolMenu.vue')['default']
     EraserToolMenu: typeof import('./components/toolbar/EraserToolMenu.vue')['default']
     ImageCanvas: typeof import('./components/canvas/ImageCanvas.vue')['default']
+    LoginForm: typeof import('./components/login/LoginForm.vue')['default']
     MaskImage: typeof import('./components/canvas/MaskImage.vue')['default']
     PromptSection: typeof import('./components/PromptSection.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sidebar: typeof import('./components/Sidebar.vue')['default']
+    SocialButtons: typeof import('./components/login/SocialButtons.vue')['default']
     Toolbar: typeof import('./components/Toolbar.vue')['default']
     ToolbarMenu: typeof import('./components/toolbar/ToolbarMenu.vue')['default']
   }
