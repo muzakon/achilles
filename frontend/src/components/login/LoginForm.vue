@@ -50,13 +50,14 @@
 
 <script setup lang="ts">
 import type { Login } from "@/interfaces/Auth";
-import { AuthService } from "@/services/Auth";
-import { FormRuleService } from "@/services/FormRuleService";
+import { AuthApi } from "@/services/api/auth.api";
+import { FormRuleService } from "@/services/helper/FormRuleHelperService";
 import dayjs from "dayjs";
+import { push } from "notivue";
 import { useRouter, type LocationQueryValue } from "vue-router";
 
 const router = useRouter();
-const authService = new AuthService();
+const authApi = new AuthApi();
 const isButtonLoading = ref(false);
 const isFormValid = ref(false);
 
@@ -67,7 +68,7 @@ const form: Ref<Login> = ref({
 
 async function authenticateUser() {
   // Attempt to log in the user using the provided form data
-  const response = await authService.login(form.value, isButtonLoading);
+  const response = await authApi.login(form.value, isButtonLoading);
 
   // Check if the login was successful and a response was received
   if (response) {
@@ -92,8 +93,17 @@ async function authenticateUser() {
     const redirect: string | LocationQueryValue[] =
       router.currentRoute.value.query.redirect || "/";
 
-    // Redirect the user to the specified URL, ensuring it's a string
-    router.push(typeof redirect === "string" ? redirect : "/");
+    push.success({
+      message:
+        "You have successfully logged in. You will be redirected shortly...",
+      duration: 2000,
+    });
+    isButtonLoading.value = true;
+    setTimeout(() => {
+      isButtonLoading.value = false;
+      // Redirect the user to the specified URL, ensuring it's a string
+      router.push(typeof redirect === "string" ? redirect : "/");
+    }, 2000);
   }
 }
 </script>

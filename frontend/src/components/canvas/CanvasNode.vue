@@ -114,9 +114,9 @@ import { useCanvasStore } from "@/stores/canvas";
 import { useVueFlow } from "@vue-flow/core";
 import _ from "lodash";
 
-import DrawCanvas from "./canvas/DrawCanvas.vue";
-import ImageCanvas from "./canvas/ImageCanvas.vue";
-import MaskImage from "./canvas/MaskImage.vue";
+import DrawCanvas from "./DrawCanvas.vue";
+import ImageCanvas from "./ImageCanvas.vue";
+import MaskImage from "./MaskImage.vue";
 import { useBrushOptionsStore } from "@/stores/brush";
 
 const canvasContainer: Ref<HTMLDivElement | null> = ref(null);

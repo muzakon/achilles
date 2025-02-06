@@ -6,7 +6,7 @@
     <div class="w-[900px] relative">
       <input
         v-model="prompt"
-        class="p-4 text-[13px] outline-0 w-full rounded-full h-[48px] bg-white border focus:!border-neutral-700 transition duration-200 placeholder-[#00000065] text-neutral-600 promptInput"
+        class="p-4 text-[13px] outline-none w-full rounded-full h-[48px] bg-white border focus:!border-neutral-700 transition duration-200 placeholder-[#00000065] text-neutral-600 promptInput"
         type="text"
         style="resize: none"
         placeholder="Prompt..."
@@ -29,26 +29,44 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import Api from "@/services/Api";
+import Api from "@/services/api/api";
 import { useCanvasStore } from "@/stores/canvas";
+import { CanvasApi } from "@/services/api/canvas.api";
+import type { GenerateImage } from "@/interfaces/canvas.api";
 
 const prompt = ref("");
 const loading = ref(false);
 const canvasStore = useCanvasStore();
+const canvasApi = new CanvasApi();
 
 async function generateImageByPrompt() {
-  if (prompt.value) {
-    try {
-      loading.value = true;
-      const data = await Api.generateImageByPrompt(prompt.value);
-      canvasStore.currentCanvasImage = data.url;
-    } catch (error) {
-      console.log(error);
-    } finally {
-      loading.value = false;
-    }
+  // if (prompt.value) {
+  //   try {
+  //     loading.value = true;
+  //     const data = await Api.generateImageByPrompt(prompt.value);
+  //     canvasStore.currentCanvasImage = data.url;
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     loading.value = false;
+  //   }
+  // }
+  const data: GenerateImage = {
+    prompt: "a blue cat",
+    imageSize: "landscape_4_3",
+    numImages: 2,
+    selectedModel: "fal-ai/fast-lightning-sdxl",
+    seed: 6252023
   }
+
+  await canvasApi.generateImage(data, loading)
 }
+
+onMounted(() => {
+  nextTick(() => {
+    console.log("hello");
+  });
+});
 </script>
 
 <style lang="scss" scoped>

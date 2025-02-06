@@ -14,7 +14,7 @@ import { onMounted, type Ref, ref, watch } from "vue";
 import { useCanvasStore } from "@/stores/canvas";
 import { useVueFlow } from "@vue-flow/core";
 import { useBrushOptionsStore } from "@/stores/brush";
-import { CanvasService } from "@/services/CanvasService";
+import { CanvasService } from "@/services/helper/CanvasHelperService";
 
 const canvas: Ref<HTMLCanvasElement | null> = ref(null);
 const context: Ref<CanvasRenderingContext2D | null> = ref(null);

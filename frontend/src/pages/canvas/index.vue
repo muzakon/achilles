@@ -53,13 +53,13 @@ import { useCanvasStore } from "@/stores/canvas";
 import { useBrushOptionsStore } from "@/stores/brush";
 
 import Toolbar from "@/components/Toolbar.vue";
-import Brush from "@/components/Brush.vue";
-import PromptSection from "@/components/PromptSection.vue";
+import Brush from "@/components/canvas/Brush.vue";
+import PromptSection from "@/components/canvas/PromptSection.vue";
 //   import Sidebar from "@/components/Sidebar.vue";
 //   import CanvasNode from "@/components/CanvasNode.vue";
 
 // Services
-import { VueFlowService } from "@/services/VueFlowService";
+import { VueFlowService } from "@/services/helper/VueFlowHelperService";
 
 // Store
 const canvasStore = useCanvasStore();

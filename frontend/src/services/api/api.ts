@@ -11,7 +11,7 @@ class Api {
       loadingInstance.value = !loadingInstance.value;
     }
   }
-  async generateRequest(
+  async request(
     method: string,
     url: string,
     params: object | null,
@@ -37,24 +37,6 @@ class Api {
       return null;
     } finally {
       this.changeLoadingStatus(loadingInstance);
-    }
-  }
-  
-  static async generateImageByPrompt(prompt: string) {
-    try {
-      // Create the data object to be sent in the POST request
-      const data = {
-        prompt: prompt, // The user-provided text prompt for generating the image
-      };
-
-      // Make the API request to generate the image
-      const response = await api.post("/images/generate", data);
-
-      // Return the response data containing the generated image details
-      return response.data;
-    } catch (error) {
-      // Return the error object in case of failure
-      return error;
     }
   }
 }
