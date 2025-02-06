@@ -1,5 +1,10 @@
 import api from "@/helper/Axios"; // Importing the Axios instance for making API requests
 import type { Ref } from "vue";
+import { FormRuleService } from "../helper/FormRuleHelperService";
+
+type Headers = {
+  [key: string]: string | string[] | undefined;
+};
 
 /**
  * Api class is responsible for handling API requests related to image generation.
@@ -19,9 +24,12 @@ class Api {
     loadingInstance: Ref<boolean> | null = null
   ) {
     try {
-      const headers = {
-        Authorization: `Bearer test`,
-      };
+      const accessToken: string = FormRuleService.getCookie("accessToken");
+      const headers: Headers = {};
+
+      if (accessToken) {
+        headers["Authorization"] = `Bearer ${accessToken}`;
+      }
 
       this.changeLoadingStatus(loadingInstance);
       const response = await api.request({
