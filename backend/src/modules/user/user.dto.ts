@@ -25,7 +25,7 @@ export class LoginUserDto {
   password: string;
 }
 
-export class RefreshAccessToken {
+export class RefreshAccessTokenDto {
   @IsNotEmpty()
   @IsString()
   refreshToken: string;

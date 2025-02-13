@@ -17,10 +17,12 @@ api.interceptors.response.use(
     // Check if the error response is a 400
     if (error.response && error.response.status === 400) {
       push.error(error.response.data);
+    } else if (error.response && error.response.status === 401) {
+      Promise.reject(error);
     }
 
     // You can add more specific error handling based on other status codes if necessary
-    if (error.response && error.response.status === 500) {
+    else if (error.response && error.response.status === 500) {
       push.error(
         "An error occured when trying to perform your request. Please try again later."
       );
