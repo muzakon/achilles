@@ -1,58 +1,136 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { GenerateImageDto, FalRequestStatusDto } from './image.dto';
-import { Image, ImageDocument } from './image.schema';
+import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { GenerateImageDto, CreationStatusCheckDto } from './image.dto';
+import {
+  ImageGenerationTask,
+  ImageGenerationTaskDocument,
+} from './image.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { FalAiWrapper } from 'src/lib/fal_ai';
-import { QueueStatus, Result } from '@fal-ai/client';
 import { REQUEST } from '@nestjs/core';
 import { UserRequest } from '../user/user.interfaces';
+import { FalModelOutputMap } from './image.interface';
+import { GeneratedImages } from './image.schema';
+import { Result } from '@fal-ai/client';
 
 @Injectable()
 export class ImageService {
-  protected falAiWrapper: FalAiWrapper = new FalAiWrapper(
+  // Initialize FalAiWrapper with the API key from environment variables
+  private readonly falAiWrapper: FalAiWrapper = new FalAiWrapper(
     process.env.FAL_AI_API_KEY,
   );
 
   constructor(
-    @InjectModel(Image.name) private imageModel: Model<Image>,
-    @Inject(REQUEST) private request: UserRequest,
+    @InjectModel(ImageGenerationTask.name)
+    private readonly imageGenerationTaskModel: Model<ImageGenerationTask>,
+    @Inject(REQUEST) private readonly request: UserRequest,
   ) {}
 
-  async all(): Promise<ImageDocument[]> {
-    return await this.imageModel.find({ owner: this.request.user.sub });
+  /**
+   * Fetch all image generation tasks for the current user.
+   * @returns {Promise<ImageGenerationTaskDocument[]>} - List of tasks owned by the user.
+   */
+  async getAllTasks(): Promise<ImageGenerationTaskDocument[]> {
+    return this.imageGenerationTaskModel
+      .find({
+        owner: this.request.user.sub,
+      })
+      .exec(); // Use .exec() for better TypeScript support and consistency
   }
 
-  async generate(data: GenerateImageDto): Promise<ImageDocument> {
+  /**
+   * Generate an image using the Fal AI API and save the task details.
+   * @param {GenerateImageDto} data - Data required for image generation.
+   * @returns {Promise<ImageGenerationTaskDocument>} - The created task document.
+   */
+  async generateImage(
+    data: GenerateImageDto,
+  ): Promise<ImageGenerationTaskDocument> {
     const requestId = await this.falAiWrapper.generateImage(data);
-    return await this.create(data, requestId);
+    return this.createTask(data, requestId);
   }
 
-  async getRequestStatus(data: FalRequestStatusDto): Promise<QueueStatus> {
-    return await this.falAiWrapper.getRequestStatus(
-      data.requestId,
-      data.selectedModel,
+  /**
+   * Check the status of an image generation task and update it if necessary.
+   * @param {CreationStatusCheckDto} data - Data containing the task ID to check.
+   * @returns {Promise<ImageGenerationTaskDocument>} - The updated task document.
+   * @throws {HttpException} - If the task is not found.
+   */
+  async checkTaskStatus(
+    data: CreationStatusCheckDto,
+  ): Promise<ImageGenerationTaskDocument> {
+    const task = await this.imageGenerationTaskModel
+      .findOne({
+        requestId: data.task_id,
+        owner: this.request.user.sub,
+      })
+      .exec();
+
+    if (!task) {
+      throw new HttpException('Could not find task.', HttpStatus.NOT_FOUND);
+    }
+
+    // If the task is already processed, return it immediately
+    if (task.status !== 'PROCESSING') {
+      return task;
+    }
+
+    // Fetch the latest status from the Fal AI API
+    const falStatus = await this.falAiWrapper.getRequestStatus(
+      task.requestId,
+      task.model.toString() as keyof FalModelOutputMap,
     );
+
+    // If the task is completed, update the task details
+    if (falStatus.status === 'COMPLETED') {
+      task.status = 'PROCESSED';
+
+      const result = await this.falAiWrapper.getRequestResult(
+        task.requestId,
+        task.model.toString() as keyof FalModelOutputMap,
+      );
+
+      // Map the generated images to the task document
+      task.generatedImages = this.createGeneratedImages(result);
+
+      await task.save();
+    }
+
+    return task;
   }
 
-  async getRequestResult(data: FalRequestStatusDto): Promise<Result<any>> {
-    return await this.falAiWrapper.getRequestResult(
-      data.requestId,
-      data.selectedModel,
-    );
+  private createGeneratedImages<Id extends keyof FalModelOutputMap>(
+    result: Result<FalModelOutputMap[Id]>,
+  ): GeneratedImages[] {
+    return result.data.images.map((image) => ({
+      width: image.width ?? null,
+      height: image.height ?? null,
+      originalUrl: image.url ?? null,
+      blobUrl: null,
+      meta: {
+        removedBackgroundUrl: null,
+        upscaledUrl: null,
+      },
+    }));
   }
 
-  async create(
+  /**
+   * Create a new image generation task in the database.
+   * @param {GenerateImageDto} data - Data required for image generation.
+   * @param {string} requestId - The request ID returned by the Fal AI API.
+   * @returns {Promise<ImageGenerationTaskDocument>} - The created task document.
+   */
+  private async createTask(
     data: GenerateImageDto,
     requestId: string,
-  ): Promise<ImageDocument> {
-    const createdImage = new this.imageModel({
+  ): Promise<ImageGenerationTaskDocument> {
+    const createdTask = new this.imageGenerationTaskModel({
       ...data,
       requestId,
       model: data.selectedModel,
-      cretedAt: Math.round(+new Date() / 1000),
-      owner: this.request['user'].sub,
+      createdAt: Math.floor(Date.now() / 1000), // Use Math.floor for clarity
+      owner: this.request.user.sub,
     });
-    return await createdImage.save();
+    return createdTask.save();
   }
 }

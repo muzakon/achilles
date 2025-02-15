@@ -1,7 +1,9 @@
 import { ApiError, fal, FalClient, QueueStatus, Result } from "@fal-ai/client";
 import { Config } from "@fal-ai/client/src/config";
 import { GenerateImageDto } from "../modules/image/image.dto";
-import { BadRequestException, HttpException, Logger } from "@nestjs/common";
+import { BadRequestException, Logger } from "@nestjs/common";
+import { EndpointType, OutputType } from "@fal-ai/client/src/types/client";
+import { FalModelOutputMap } from "src/modules/image/image.interface";
 
 // Define a type for the singleton FalClient instance
 type SingletonFalClient = {
@@ -58,9 +60,9 @@ export class FalAiWrapper {
 	 * @returns The status of the request.
 	 * @throws HttpException or BadRequestException if an error occurs.
 	 */
-	async getRequestStatus(
+	async getRequestStatus<Id extends keyof FalModelOutputMap>(
 		requestId: string,
-		selectedModel: string,
+		selectedModel: Id,
 	): Promise<QueueStatus> {
 		try {
 			const status = await this.fal.queue.status(selectedModel, {
@@ -80,10 +82,10 @@ export class FalAiWrapper {
 	 * @returns The result of the request.
 	 * @throws HttpException or BadRequestException if an error occurs.
 	 */
-	async getRequestResult(
+	async getRequestResult<Id extends keyof FalModelOutputMap>(
 		requestId: string,
-		selectedModel: string,
-	): Promise<Result<any>> {
+		selectedModel: Id,
+	): Promise<Result<FalModelOutputMap[Id]>> {
 		try {
 			const result = await this.fal.queue.result(selectedModel, {
 				requestId: requestId,

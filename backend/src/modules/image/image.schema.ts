@@ -1,83 +1,79 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
-import { User } from '../user/user.schema';
-import * as mongoose from 'mongoose';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { HydratedDocument } from "mongoose";
+import { User } from "../user/user.schema";
+import * as mongoose from "mongoose";
+import { FalModelOutputMap } from "./image.interface";
 
-export type ImageDocument = HydratedDocument<Image>;
+export type ImageGenerationTaskDocument = HydratedDocument<ImageGenerationTask>;
 
 @Schema({ _id: false }) // No need for _id in subdocument
 class Meta {
-  @Prop()
-  removedBackgroundUrl: string;
+	@Prop({ type: String, default: null })
+	removedBackgroundUrl: string | null;
 
-  @Prop()
-  upscaledUrl: string;
+	@Prop({ type: String, default: null })
+	upscaledUrl: string | null;
 }
 
 @Schema({ _id: true }) // Ensure _id is generated for each subdocument
-class GeneratedImages {
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    default: () => new Types.ObjectId(),
-  })
-  _id: Types.ObjectId;
+export class GeneratedImages {
+	@Prop({ type: String, default: null })
+	blobUrl: string | null;
 
-  @Prop()
-  blobUrl: string;
+	@Prop({ type: String, default: null })
+	originalUrl: string | null;
 
-  @Prop()
-  originalUrl: string;
+	@Prop({ type: Number, default: null })
+	width: number | null;
 
-  @Prop()
-  width: number;
+	@Prop({ type: Number, default: null })
+	height: number | null;
 
-  @Prop()
-  height: number;
-
-  @Prop({
-    type: Meta,
-  })
-  meta: Meta;
+	@Prop({
+		type: Meta,
+	})
+	meta: Meta;
 }
 
-@Schema()
-export class Image {
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  })
-  owner: User;
+@Schema({ collection: "image_generation_tasks" })
+export class ImageGenerationTask {
+	@Prop({
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User",
+	})
+	owner: User;
 
-  @Prop()
-  prompt: string;
+	@Prop()
+	prompt: string;
 
-  @Prop()
-  model: string;
+	@Prop({ type: String, default: null })
+	model: keyof FalModelOutputMap;
 
-  @Prop()
-  requestId: string;
+	@Prop()
+	requestId: string;
 
-  @Prop()
-  baseUrl: string;
+	@Prop()
+	baseUrl: string;
 
-  @Prop()
-  imageSize: string;
+	@Prop()
+	imageSize: string;
 
-  @Prop()
-  seed: number;
+	@Prop()
+	seed: number;
 
-  @Prop({
-    type: String,
-    enum: ['PROCESSING', 'PROCESSED', 'ERROR'],
-    default: 'PROCESSING',
-  })
-  status: string;
+	@Prop({
+		type: String,
+		enum: ["PROCESSING", "PROCESSED", "ERROR"],
+		default: "PROCESSING",
+	})
+	status: "PROCESSING" | "PROCESSED" | "ERROR";
 
-  @Prop()
-  cretedAt: number;
+	@Prop()
+	cretedAt: number;
 
-  @Prop({ type: [GeneratedImages] }) // Use the subdocument schema here
-  generatedImages: GeneratedImages[];
+	@Prop({ type: [GeneratedImages] }) // Use the subdocument schema here
+	generatedImages: GeneratedImages[];
 }
 
-export const ImageSchema = SchemaFactory.createForClass(Image);
+export const ImageGenerationTaskSchema =
+	SchemaFactory.createForClass(ImageGenerationTask);
