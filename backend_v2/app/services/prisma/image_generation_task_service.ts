@@ -1,5 +1,5 @@
 import { GeneratedImageType, ImageGenerationTask, PrismaClient } from '@prisma/client'
-import { PrismaService } from './prisma_service.js'
+import { PrismaService } from './utils/prisma_service.js'
 import {
   ImageGenerationTaskCreate,
   ImageGenerationTaskStatus,

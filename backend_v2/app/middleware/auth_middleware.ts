@@ -3,7 +3,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 import { StatusCodes } from 'http-status-codes'
 import { inject } from '@adonisjs/core'
-import { AuthService } from '#services/auth_service'
+import { AuthService } from '#services/utils/auth_service'
 
 declare module '@adonisjs/core/http' {
   interface HttpContext {

@@ -1,7 +1,8 @@
 import { inject } from '@adonisjs/core'
 import { HttpContext } from '@adonisjs/core/http'
-import { AuthService } from '#services/auth_service'
+import { AuthService } from '#services/utils/auth_service'
 import { loginValidator, refreshTokenValidator, registerValidator } from '#validators/auth'
+import { Validator } from '../lib/validator.js'
 
 /**
  * AuthController class handles authentication-related HTTP requests.
@@ -16,24 +17,12 @@ export default class AuthController {
   constructor(private authService: AuthService) {}
 
   /**
-   * Validates the incoming request against a specified validator.
-   * @template T - The type of the validator to use for validation.
-   * @param request - The HTTP request object containing the data to validate.
-   * @param validator - Validator object to validate the request data.
-   * @returns A Promise resolving to the validated data or throwing an error if validation fails.
-   */
-  private async validateRequest<T>(request: HttpContext['request'], validator: T): Promise<any> {
-    const data = request.all()
-    return await validator.validate(data)
-  }
-
-  /**
    * Handles user login.
    * @param context - HTTP context containing the request.
    * @returns A Promise that resolves with the login result.
    */
   async login({ request }: HttpContext): Promise<object> {
-    const payload = await this.validateRequest(request, loginValidator)
+    const payload = await Validator.validateRequest(request, loginValidator)
     return await this.authService.login(payload)
   }
 
@@ -43,7 +32,7 @@ export default class AuthController {
    * @returns A Promise that resolves with the registration result.
    */
   async register({ request }: HttpContext): Promise<object> {
-    const payload = await this.validateRequest(request, registerValidator)
+    const payload = await Validator.validateRequest(request, registerValidator)
     return await this.authService.register(payload)
   }
 
@@ -53,7 +42,7 @@ export default class AuthController {
    * @returns A Promise that resolves with the refreshed token.
    */
   async refresh({ request }: HttpContext): Promise<object> {
-    const payload = await this.validateRequest(request, refreshTokenValidator)
+    const payload = await Validator.validateRequest(request, refreshTokenValidator)
     return await this.authService.refresh(payload)
   }
 }

@@ -1,5 +1,5 @@
 import type { ApplicationService } from '@adonisjs/core/types'
-import { PrismaService } from '#services/prisma_service'
+import { PrismaService } from '#services/utils/prisma_service'
 import { PrismaClient } from '@prisma/client'
 
 export default class PrismaProvider {

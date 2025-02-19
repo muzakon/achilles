@@ -1,6 +1,6 @@
 // import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import { PrismaService } from '#services/prisma_service'
+import { PrismaService } from '#services/utils/prisma_service'
 import { PrismaClient, User } from '@prisma/client'
 
 @inject()
