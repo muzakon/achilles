@@ -54,6 +54,7 @@
     "@adonisjs/core": "^6.17.2",
     "@adonisjs/cors": "^2.2.1",
     "@adonisjs/lucid": "^21.6.0",
+    "@google-cloud/storage": "^7.15.1",
     "@prisma/client": "^6.3.1",
     "@vinejs/vine": "^3.0.0",
     "argon2": "^0.41.1",

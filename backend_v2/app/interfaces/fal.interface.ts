@@ -4,7 +4,7 @@ export enum TaskStatus {
   COMPLETED = 'COMPLETED',
 }
 
-interface Image {
+export interface FalImage {
   url: string
   width: number
   height: number
@@ -33,7 +33,7 @@ export interface QueuedImageTaskResponse {
 }
 
 export interface ProcessedImageTaskResponse {
-  images: Image[]
+  images: FalImage[]
   timings: Timings
   seed: number
   has_nsfw_concepts: boolean[]

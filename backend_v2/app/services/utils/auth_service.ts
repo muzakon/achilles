@@ -1,6 +1,6 @@
 import * as jose from 'jose'
 import hash from '@adonisjs/core/services/hash'
-import { AuthResponse, TokenPayload } from '../interfaces/auth.interface.js'
+import { AuthResponse } from '../../interfaces/auth.interface.js'
 import { PrismaClient, User } from '@prisma/client'
 import dayjs from 'dayjs'
 import env from '#start/env'

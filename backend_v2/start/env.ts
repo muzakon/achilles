@@ -21,4 +21,5 @@ export default await Env.create(new URL('../', import.meta.url), {
   JWT_SECRET: Env.schema.string(),
   FAL_AI_API_KEY: Env.schema.string(),
   DATABASE_URL: Env.schema.string(),
+  SERVICE_ACCOUNT_JSON_FILENAME: Env.schema.string(),
 })

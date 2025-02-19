@@ -1,21 +1,33 @@
 import { GeneratedImageType, ImageGenerationTask, PrismaClient } from '@prisma/client'
-import { PrismaService } from './utils/prisma_service.js'
+import { PrismaService } from '../utils/prisma_service.js'
 import {
   ImageGenerationTaskCreate,
   ImageGenerationTaskStatus,
 } from '#validators/image_generation_task'
-import { Fal } from '../lib/fal.js'
+import { Fal } from '../../lib/fal.js'
 import { StatusCodes } from 'http-status-codes'
 import { Exception } from '@adonisjs/core/exceptions'
-import { ProcessedImageTaskResponse, TaskStatus } from '../interfaces/fal.interface.js'
+import { FalImage, ProcessedImageTaskResponse, TaskStatus } from '../../interfaces/fal.interface.js'
 import { ulid } from 'ulidx'
 import dayjs from 'dayjs'
+import { GoogleCloudStorageService } from '#services/utils/storage'
+import env from '#start/env'
+import config from '@adonisjs/core/services/config'
+import logger from '@adonisjs/core/services/logger'
 
 export class ImageGenerationTaskService {
+  private storage: GoogleCloudStorageService
+
   constructor(
     private prisma: PrismaClient = PrismaService.getInstance(),
     private fal: Fal = new Fal()
-  ) {}
+  ) {
+    this.storage = new GoogleCloudStorageService(
+      env.get('GCS_BUCKET_NAME'),
+      config.get('app.serviceAccount'),
+      true
+    )
+  }
 
   async fetchAllTasks(userId: string): Promise<ImageGenerationTask[]> {
     return this.prisma.imageGenerationTask.findMany({
@@ -69,7 +81,7 @@ export class ImageGenerationTaskService {
       return this.updateTask(
         task.id,
         TaskStatus.COMPLETED,
-        this.createGeneratedImages(taskResponse)
+        await this.createGeneratedImages(userId, taskResponse)
       )
     }
 
@@ -80,18 +92,28 @@ export class ImageGenerationTaskService {
     return task
   }
 
-  private createGeneratedImages(response: ProcessedImageTaskResponse): GeneratedImageType[] {
-    return response.images.map((image) => ({
-      width: image.width,
-      height: image.height,
-      originalUrl: image.url,
-      blobUrl: null,
-      meta: {
-        removedBackgroundUrl: null,
-        upscaledUrl: null,
-      },
-      id: ulid(),
-    }))
+  private async createGeneratedImages(
+    userId: string,
+    response: ProcessedImageTaskResponse
+  ): Promise<GeneratedImageType[]> {
+    let output = []
+    for (let i = 0; i < response.images.length; i++) {
+      const image = response.images[i]
+      const imageId = ulid().toString()
+
+      output.push({
+        width: image.width,
+        height: image.height,
+        originalUrl: image.url,
+        blobUrl: await this.uploadImagesToBlob(userId, image, imageId),
+        meta: {
+          removedBackgroundUrl: null,
+          upscaledUrl: null,
+        },
+        id: imageId,
+      })
+    }
+    return output
   }
 
   private async updateTask(
@@ -106,5 +128,24 @@ export class ImageGenerationTaskService {
         ...(generatedImages && { generatedImages }),
       },
     })
+  }
+
+  private async uploadImagesToBlob(
+    userId: string,
+    image: FalImage,
+    imageId: string
+  ): Promise<string> {
+    const destinationPath = `generations/${userId}/${imageId}.jpeg`
+
+    if (!image.url) {
+      logger.info(`Image: ${imageId} has no Fal URL. So, it is not possible to upload into GCS.`)
+
+      throw new Exception('An unknown error occured. Try again later.', {
+        status: StatusCodes.BAD_REQUEST,
+      })
+    }
+
+    await this.storage.uploadImageFromUrl(image.url, destinationPath)
+    return destinationPath
   }
 }
