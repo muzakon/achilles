@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node bin/server.js",
     "build": "node ace build",
-    "dev": "export NODE_ENV=development && node ace serve --hmr",
+    "dev": "node ace serve --hmr",
     "test": "node ace test",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -42,7 +42,6 @@
     "@japa/runner": "^4.2.0",
     "@swc/core": "1.10.7",
     "@types/node": "^22.13.2",
-    "cross-env": "^7.0.3",
     "eslint": "^9.20.1",
     "hot-hook": "^0.4.0",
     "pino-pretty": "^13.0.0",
@@ -55,8 +54,17 @@
     "@adonisjs/core": "^6.17.2",
     "@adonisjs/cors": "^2.2.1",
     "@adonisjs/lucid": "^21.6.0",
+    "@prisma/client": "^6.3.1",
     "@vinejs/vine": "^3.0.0",
-    "reflect-metadata": "^0.2.2"
+    "argon2": "^0.41.1",
+    "bson": "^6.10.3",
+    "dayjs": "^1.11.13",
+    "http-status-codes": "^2.3.0",
+    "jose": "^5.10.0",
+    "ky": "^1.7.5",
+    "prisma": "^6.3.1",
+    "reflect-metadata": "^0.2.2",
+    "ulidx": "^2.4.1"
   },
   "hotHook": {
     "boundaries": [

@@ -1,10 +1,16 @@
-import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  HttpException,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
 import { GenerateImageDto, CreationStatusCheckDto } from './image.dto';
 import {
   ImageGenerationTask,
   ImageGenerationTaskDocument,
 } from './image.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { FalAiWrapper } from 'src/lib/fal_ai';
 import { REQUEST } from '@nestjs/core';
@@ -12,6 +18,8 @@ import { UserRequest } from '../user/user.interfaces';
 import { FalModelOutputMap } from './image.interface';
 import { GeneratedImages } from './image.schema';
 import { Result } from '@fal-ai/client';
+import { GoogleCloudStorageService } from '../../lib/cloud_storage';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ImageService {
@@ -19,23 +27,31 @@ export class ImageService {
   private readonly falAiWrapper: FalAiWrapper = new FalAiWrapper(
     process.env.FAL_AI_API_KEY,
   );
+  private readonly logger = new Logger(ImageService.name);
 
   constructor(
     @InjectModel(ImageGenerationTask.name)
     private readonly imageGenerationTaskModel: Model<ImageGenerationTask>,
     @Inject(REQUEST) private readonly request: UserRequest,
+    private configService: ConfigService,
   ) {}
 
   /**
    * Fetch all image generation tasks for the current user.
-   * @returns {Promise<ImageGenerationTaskDocument[]>} - List of tasks owned by the user.
+   * @returns {Promise<ImageGenerationTask[]>} - List of tasks owned by the user.
    */
-  async getAllTasks(): Promise<ImageGenerationTaskDocument[]> {
-    return this.imageGenerationTaskModel
+  async getAllTasks(): Promise<ImageGenerationTask[]> {
+    const tasks = await this.imageGenerationTaskModel
       .find({
         owner: this.request.user.sub,
       })
-      .exec(); // Use .exec() for better TypeScript support and consistency
+      .exec();
+
+    return tasks.map((x) => ({
+      ...x.toObject({
+        virtuals: true,
+      }),
+    }));
   }
 
   /**
@@ -59,12 +75,13 @@ export class ImageService {
   async checkTaskStatus(
     data: CreationStatusCheckDto,
   ): Promise<ImageGenerationTaskDocument> {
-    const task = await this.imageGenerationTaskModel
-      .findOne({
-        requestId: data.task_id,
-        owner: this.request.user.sub,
-      })
-      .exec();
+    const task: ImageGenerationTaskDocument | null =
+      await this.imageGenerationTaskModel
+        .findOne({
+          requestId: data.task_id,
+          owner: this.request.user.sub,
+        })
+        .exec();
 
     if (!task) {
       throw new HttpException('Could not find task.', HttpStatus.NOT_FOUND);
@@ -93,6 +110,13 @@ export class ImageService {
       // Map the generated images to the task document
       task.generatedImages = this.createGeneratedImages(result);
 
+      for (let i = 0; i < task.generatedImages.length; i++) {
+        const image = task.generatedImages[i];
+        const blobUrl = await this.uploadImagesToBlob(image);
+
+        image.blobUrl = blobUrl;
+      }
+
       await task.save();
     }
 
@@ -111,7 +135,54 @@ export class ImageService {
         removedBackgroundUrl: null,
         upscaledUrl: null,
       },
+      _id: new mongoose.Types.ObjectId(),
+      signedUrl: null,
     }));
+  }
+
+  private async uploadImagesToBlob(image: GeneratedImages): Promise<string> {
+    const bucketName = this.configService.get<string>('GCS_BUCKET_NAME');
+    if (!bucketName) {
+      this.logger.error('GCS_BUCKET_NAME not set in environment variables.');
+      throw new HttpException(
+        'An unknown error occured. Try again later.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const serviceAccountData =
+      this.configService.get<object>('SERVICE_ACCOUNT');
+    if (!serviceAccountData) {
+      this.logger.error('SERVICE_ACCOUNT not set in environment variables.');
+      throw new HttpException(
+        'An unknown error occured. Try again later.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const storageService = new GoogleCloudStorageService(
+      bucketName,
+      serviceAccountData,
+      true,
+    );
+
+    const imageId = image._id.toString();
+    const destinationPath = `generations/${this.request.user.sub.toString()}/${imageId}.jpeg`;
+
+    if (!image.originalUrl) {
+      this.logger.log(
+        `Image: ${imageId} has no Fal URL. So, it is not possible to upload into GCS.`,
+      );
+
+      throw new HttpException(
+        'An unknown error occured. Try again later.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await storageService.uploadImageFromUrl(image.originalUrl, destinationPath);
+
+    return destinationPath;
   }
 
   /**

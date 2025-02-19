@@ -1,0 +1,34 @@
+model ImageGenerationTask {
+    id              String               @id @default(auto()) @map("_id") @db.ObjectId
+    owner           String               @db.ObjectId
+    prompt          String
+    model           String
+    requestId       String
+    imageSize       String
+    seed            Int
+    status          TaskStatus
+    createdAt       Int
+    generatedImages GeneratedImageType[]
+
+    @@map("image_generation_tasks")
+}
+
+enum TaskStatus {
+    IN_QUEUE
+    COMPLETED
+    ERROR
+}
+
+type GeneratedImageType {
+    id          String
+    blobUrl     String?
+    originalUrl String?
+    width       Int?
+    height      Int?
+    meta        Meta
+}
+
+type Meta {
+    removedBackgroundUrl String?
+    upscaledUrl          String?
+}
