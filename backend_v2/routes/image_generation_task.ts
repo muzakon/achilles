@@ -7,8 +7,9 @@ import router from "@adonisjs/core/services/router";
 export default function authRouter() {
 	return router
 		.group(() => {
-			router.post("/create", [ImageGenerationTaskController, "create"]);
+			router.get("/all", [ImageGenerationTaskController, "all"]);
 			router.get("/status", [ImageGenerationTaskController, "status"]);
+			router.post("/create", [ImageGenerationTaskController, "create"]);
 		})
 		.use(middleware.auth())
 		.prefix("/image-generation-task");
