@@ -9,17 +9,24 @@
 |
 */
 
-import { Env } from '@adonisjs/core/env'
+import { Env } from "@adonisjs/core/env";
 
-export default await Env.create(new URL('../', import.meta.url), {
-  NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
-  PORT: Env.schema.number(),
-  APP_KEY: Env.schema.string(),
-  HOST: Env.schema.string({ format: 'host' }),
-  LOG_LEVEL: Env.schema.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']),
-  GCS_BUCKET_NAME: Env.schema.string(),
-  JWT_SECRET: Env.schema.string(),
-  FAL_AI_API_KEY: Env.schema.string(),
-  DATABASE_URL: Env.schema.string(),
-  SERVICE_ACCOUNT_JSON_FILENAME: Env.schema.string(),
-})
+export default await Env.create(new URL("../", import.meta.url), {
+	NODE_ENV: Env.schema.enum(["development", "production", "test"] as const),
+	PORT: Env.schema.number(),
+	APP_KEY: Env.schema.string(),
+	HOST: Env.schema.string({ format: "host" }),
+	LOG_LEVEL: Env.schema.enum([
+		"fatal",
+		"error",
+		"warn",
+		"info",
+		"debug",
+		"trace",
+	]),
+	GCS_BUCKET_NAME: Env.schema.string(),
+	JWT_SECRET: Env.schema.string(),
+	FAL_AI_API_KEY: Env.schema.string(),
+	DATABASE_URL: Env.schema.string(),
+	SERVICE_ACCOUNT_JSON_FILENAME: Env.schema.string(),
+});
